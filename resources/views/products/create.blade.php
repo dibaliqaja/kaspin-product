@@ -1,4 +1,4 @@
-@extends('_home')
+@extends('home')
 @section('content')
 
     <form action="{{ route('products.store') }}" method="post">

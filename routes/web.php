@@ -19,3 +19,9 @@ Route::get('/', function () {
 });
 
 Route::resource('products', ProductController::class);
+
+Auth::routes([
+    'register' => false,
+    'reset' => false,
+    'verify' => false
+]);

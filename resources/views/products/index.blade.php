@@ -1,4 +1,4 @@
-@extends('_home')
+@extends('home')
 @section('content')
 
     @if (Session::has('alert'))
@@ -12,10 +12,12 @@
 
     <div class="row">
         <div class="col-md-8">
-            <a href="{{ route('products.create') }}" class="btn btn-primary">Tambah Barang</a><br><br>
+            @if (auth()->user())
+                <a href="{{ route('products.create') }}" class="btn btn-primary">Tambah Barang</a><br><br>
+            @endif
         </div>
         <div class="col-md-4 mb-3">
-            <form action="#" class="flex-sm">
+            <form action="" class="flex-sm">
                 <div class="input-group">
                     <input type="text" name="keyword" class="form-control" placeholder="Search" value="{{ Request::get('keyword') }}">
                     <div class="input-group-append">
@@ -46,8 +48,14 @@
                         <td>{{ $result->sku }}</td>
                         <td>Rp. {{ number_format($result->price, 2, ',', '.') }}</td>
                         <td>
-                            <a href="{{ route('products.edit', $result->id) }}" type="button" class="btn btn-sm btn-info">Edit</i></a>                                
-                            <a href="javascript:void(0)" id="btn-delete" class="btn btn-sm btn-danger" onclick="deleteData('{{ $result->id }}')" data-toggle="modal" data-target="#deleteProductModal">Delete</i></a>
+                            @if (!auth()->user())
+                                <small class="text-secondary">No Action</small>
+                            @else
+                                <a href="{{ route('products.edit', $result->id) }}" type="button" class="btn btn-sm btn-info">Edit</i></a>
+                                @if (Auth::user()->role == 'Administrator')                                    
+                                    <a href="javascript:void(0)" id="btn-delete" class="btn btn-sm btn-danger" onclick="deleteData('{{ $result->id }}')" data-toggle="modal" data-target="#deleteProductModal">Delete</i></a>
+                                @endif
+                            @endif
                         </td>
                     </tr>
                 @empty

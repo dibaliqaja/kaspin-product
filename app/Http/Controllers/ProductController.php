@@ -5,9 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->except('index');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -88,6 +99,10 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
+        if (! Gate::allows('admin')) {
+            abort(403);
+        }
+
         $product = Product::findOrFail($id);
         $product->delete();
     
